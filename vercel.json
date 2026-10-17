@@ -3,7 +3,7 @@
   "rewrites": [
     {
       "source": "/api/v1/:path*",
-      "destination": "https://nairobi-tuning-production.up.railway.app/api/v1/:path*"
+      "destination": "https://nbo-production-25da.up.railway.app/api/v1/:path*"
     }
   ],
   "headers": [

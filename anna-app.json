@@ -14,7 +14,7 @@
     {
       "name": "nairobi_telemetry_engine",
       "description": "Rust-powered reasoning engine executing KRA CRSP tax valuations and altitude-adjusted thermodynamic horsepower calculations.",
-      "binary_path": "https://nairobi-tuning.vercel.app/api/v1",
+      "binary_path": "https://nbo-production-25da.up.railway.app/api/v1",
       "tools": [
         {
           "name": "compute_telemetry",
