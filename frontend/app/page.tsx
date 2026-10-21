@@ -11,6 +11,7 @@ import {
   FuelProfile,
   PermalinkCodec,
   ComparisonGarageVault,
+  AnnaRuntimeBridge,
   BuildSnapshot,
 } from "../services/telemetry";
 
@@ -170,19 +171,21 @@ export default function Nbo1795Cockpit() {
 
       try {
         // 2. Query Rust Backend -> Groq JSON-Mode Blueprint + KRA Valuation
-        const res = await fetch("/api/v1/telemetry", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            model: cleanQuery,
-            year: targetYear,
-            stage: targetStage,
-            focus: activeFocus,
-          }),
-        });
+        //    Inside Anna OS: anna.tools.invoke -> bundled nbo-engine Executa (Qualified MAU)
+        //    Standalone browser: direct HTTPS call to Railway backend
+        let data: TelemetryPayload | null = null;
+        try {
+          data = (await AnnaRuntimeBridge.invokeTelemetry(
+            cleanQuery,
+            targetYear,
+            targetStage,
+            activeFocus
+          )) as TelemetryPayload;
+        } catch (err) {
+          console.error("Telemetry invocation failed", err);
+        }
 
-        if (res.ok) {
-          const data: TelemetryPayload = await res.json();
+        if (data && data.blueprint) {
           setTelemetry(data);
 
           const bp = data.blueprint;
@@ -230,14 +233,15 @@ export default function Nbo1795Cockpit() {
 
         // 4. Stream Unbuffered Groq Modification Directives
         setIsStreaming(true);
-        const sseUrl = new URL("/api/v1/tuning/live-advisory", window.location.origin);
-        sseUrl.searchParams.set("model", cleanQuery);
-        sseUrl.searchParams.set("year", targetYear.toString());
-        sseUrl.searchParams.set("stage", targetStage.toString());
-        sseUrl.searchParams.set("focus", `${activeFocus} (${fuel})`);
+        const sseUrl = AnnaRuntimeBridge.getAdvisoryStreamUrl(
+          cleanQuery,
+          targetYear,
+          targetStage,
+          `${activeFocus} (${fuel})`
+        );
 
         eventSourceRef.current?.close();
-        const sse = new EventSource(sseUrl.toString());
+        const sse = new EventSource(sseUrl);
         eventSourceRef.current = sse;
 
         sse.onmessage = (event) => {

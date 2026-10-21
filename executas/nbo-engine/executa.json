@@ -1,0 +1,19 @@
+{
+  "slug": "nbo-engine",
+  "name": "nbo-engine",
+  "version": "0.1.0",
+  "executa_type": "tool",
+  "description": "Computes KRA CRSP landed duties, 1,795m ASL horsepower derating, and Groq stage blueprints.",
+  "tool_id": "tool-dev-nbo-engine",
+  "type": "node",
+  "command": ["node", "index.js"],
+  "manifest_file": "./manifest.json",
+  "active": "local",
+  "profiles": {
+    "local": {
+      "type": "command",
+      "command": ["node", "index.js"],
+      "working_directory": "."
+    }
+  }
+}

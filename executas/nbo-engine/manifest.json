@@ -1,0 +1,22 @@
+{
+  "name": "nbo-engine",
+  "version": "0.1.0",
+  "description": "Computes KRA CRSP landed duties, 1,795m ASL horsepower derating, and Groq stage blueprints.",
+  "runtime": {
+    "type": "binary"
+  },
+  "credentials": [],
+  "host_capabilities": [],
+  "tools": [
+    {
+      "name": "compute_telemetry",
+      "description": "Executes KRA valuation and 1,795m ASL thermodynamic dyno simulation for any vehicle.",
+      "parameters": [
+        { "name": "model", "type": "string", "description": "Vehicle make and model", "required": true },
+        { "name": "year", "type": "integer", "description": "Manufacture year (2019-2026)", "required": true },
+        { "name": "stage", "type": "integer", "description": "Tuning stage (1, 2, or 3)", "required": true },
+        { "name": "focus", "type": "string", "description": "Mechanical calibration focus", "required": true }
+      ]
+    }
+  ]
+}

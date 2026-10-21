@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -19,6 +19,9 @@ export default function RootLayout({
       style={{ backgroundColor: "#030509", color: "#E2E8F0", colorScheme: "dark" }}
     >
       <head>
+        {/* Anna OS Tool ID map — injected by @anna-ai/cli at packaging time (window.__ANNA_TOOL_IDS__) */}
+        <script src="./anna-tool-ids.js" defer />
+
         {/* Motorsport Typography: Space Grotesk (Headers) & JetBrains Mono (Telemetry Numerals) */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

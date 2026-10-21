@@ -110,6 +110,7 @@ impl TelemetryController {
 
 pub fn build_router(state: AppState) -> Router {
     Router::new()
+        .route("/health", get(|| async { "ok" }))
         .route("/api/v1/telemetry", post(TelemetryController::compute_metrics))
         .route("/api/v1/tuning/live-advisory", get(TelemetryController::stream_groq_advisory))
         .with_state(state)

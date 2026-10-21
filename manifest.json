@@ -1,0 +1,35 @@
+{
+  "schema": 2,
+  "permissions": [],
+  "required_executas": [
+    {
+      "tool_id": "bundled:nbo-engine",
+      "min_version": "0.1.0",
+      "version": "latest"
+    }
+  ],
+  "ui": {
+    "bundle": {
+      "format": "static-spa",
+      "entry": "index.html",
+      "external_origins": [
+        "https://nbo-production-25da.up.railway.app",
+        "https://en.wikipedia.org",
+        "https://upload.wikimedia.org",
+        "https://images.unsplash.com"
+      ]
+    },
+    "views": [
+      {
+        "name": "main",
+        "title": "NBO 1795 Telemetry Cockpit",
+        "default": true
+      }
+    ],
+    "host_api": {
+      "tools": [
+        "required:bundled:nbo-engine"
+      ]
+    }
+  }
+}

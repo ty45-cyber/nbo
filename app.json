@@ -1,0 +1,12 @@
+{
+  "slug": "nbo-1795",
+  "name": "NBO 1795 Telemetry & KRA Engine",
+  "version": "1.0.0",
+  "description": "1,795m ASL thermodynamic dyno simulator, live Groq LPU build advisor, and 2026 KRA CRSP landed cost calculator.",
+  "category": "productivity",
+  "bundled_executas": {
+    "nbo-engine": {
+      "path": "./executas/nbo-engine"
+    }
+  }
+}

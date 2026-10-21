@@ -430,6 +430,70 @@ export class PermalinkCodec {
   }
 }
 
+const RAILWAY_BASE = "https://nbo-production-25da.up.railway.app";
+
+export class AnnaRuntimeBridge {
+  /**
+   * Invokes the bundled Executa via Anna Host API when inside Anna OS (logging Qualified MAU),
+   * or falls back to direct Railway HTTPS call when accessed via standalone browser.
+   */
+  public static async invokeTelemetry(
+    model: string,
+    year: number,
+    stage: 1 | 2 | 3,
+    focus: string
+  ): Promise<unknown> {
+    if (typeof window !== "undefined") {
+      const win = window as unknown as {
+        __ANNA_TOOL_IDS__?: Record<string, string>;
+        anna?: {
+          tools?: {
+            invoke: (payload: {
+              tool_id: string;
+              method: string;
+              args: Record<string, unknown>;
+            }) => Promise<unknown>;
+          };
+        };
+      };
+
+      if (win.anna?.tools?.invoke) {
+        const toolId = win.__ANNA_TOOL_IDS__?.["nbo-engine"] || "tool-dev-nbo-engine";
+        return await win.anna.tools.invoke({
+          tool_id: toolId,
+          method: "compute_telemetry",
+          args: { model, year, stage, focus },
+        });
+      }
+    }
+
+    const res = await fetch(`${RAILWAY_BASE}/api/v1/telemetry`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model, year, stage, focus }),
+    });
+    if (!res.ok) throw new Error(`Railway HTTP ${res.status}`);
+    return await res.json();
+  }
+
+  /**
+   * Returns the direct Railway SSE URL so EventSource never hits a 404 on Vercel.
+   */
+  public static getAdvisoryStreamUrl(
+    model: string,
+    year: number,
+    stage: number,
+    focus: string
+  ): string {
+    const sseUrl = new URL(`${RAILWAY_BASE}/api/v1/tuning/live-advisory`);
+    sseUrl.searchParams.set("model", model);
+    sseUrl.searchParams.set("year", year.toString());
+    sseUrl.searchParams.set("stage", stage.toString());
+    sseUrl.searchParams.set("focus", focus);
+    return sseUrl.toString();
+  }
+}
+
 export class ComparisonGarageVault {
   private static readonly STORAGE_KEY = "nbo1795_telemetry_garage_v1";
 
